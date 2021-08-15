@@ -20,8 +20,7 @@ class MainTestSuite(unittest.TestCase):
         except Exception as e:
             print(e)
             pass
-
-
+        
         print('Insertando con password')
         cs.addElement(password='hola', name='hola', description='asdf', passphaser='asdf').printm()
 
@@ -29,13 +28,21 @@ class MainTestSuite(unittest.TestCase):
         # Insertamos siin password
         print('Insertando sin password 1')
         cs.addElement(name='segundaEntrada', description='Esta es otra entrad', passphaser='asdf').printm()
+        # LeemosPorNombre
+        print('-------------')
+        om = cs.list(mode='name',name='segundaEntrada')
+        print(om.message)
+        print('-------------')        
         print('Insertando sin password 2 después de que caduque la sesión')
         hnd.sh.closeSession()
         cs.addElement(name='terceraEntrada', description='Esta es deberia de fallar por sesion caducada', passphaser='asdf').printm()
 
         # Leemos 
+        print('-------------')
         om = cs.list(password='hola',mode='all')
         print(om.message)
+
+
 
 if __name__ == '__main__':
     unittest.main()
