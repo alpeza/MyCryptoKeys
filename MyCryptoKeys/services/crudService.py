@@ -19,16 +19,36 @@ def checkIfLogged(password):
     om.data = {"password": password}
     return om
 
-def list(password=''):
+def list(password='',mode='all',name=''):
     om = hnd.om.OMessage()
     retom = checkIfLogged(password)
     if not retom.isOK:
         return retom
     password = retom.data['password']
     if not hnd.cyh.existsFile(hnd.ch.storagefile):
-        pass
+        om.message = 'No existe ningún fichero de key, inicie un nuevo billetero'
+        om.isOK = False
+        return om
     else:
-        pass
+        try:
+            jsonfile = hnd.ch.storagefile + '_tmp.json'
+            hnd.cyh.decryptFile(hnd.ch.storagefile,jsonfile,password)
+            hnd.fh.setJSONPath(jsonfile)
+            if mode == 'all':
+                om.message = hnd.fh.getAll()
+            elif mode == 'name':
+                om.message = hnd.fh.getByName(name=name)
+        except Exception as e:
+            om.isOK = False
+            om.message = str(e)
+            om.exception = str(traceback.format_exc())
+        finally:
+            try:
+                hnd.cyh.remove(jsonfile)
+                return om
+            except Exception as e:
+                pass
+
 
 def addElement(password='',env='pro',name='',description='',passphaser='',note=''):
     # Añade una nueva entrada. 
