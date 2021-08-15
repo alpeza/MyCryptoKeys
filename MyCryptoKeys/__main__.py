@@ -3,7 +3,7 @@
 
 def main():
     """The actual entry point."""
-    raise NotImplementedError()
+    print('holi')
 
 
 if __name__ == '__main__':
